@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  postgis:
+    container_name: postgis
+    image: "mdillon/postgis"
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres_user
+      - POSTGRES_PASSWORD=postgres_pw
+      - POSTGRES_DB=postgres_db
+    ports:
+      - 54320:5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
