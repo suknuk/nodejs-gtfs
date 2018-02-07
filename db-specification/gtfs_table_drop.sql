@@ -13,6 +13,7 @@ drop table transfers cascade;
 drop table feed_info cascade;
 
 drop table route_types cascade;
+drop table directions cascade;
 drop table pickup_dropoff_types cascade;
 drop table payment_methods cascade;
 drop table location_types cascade;

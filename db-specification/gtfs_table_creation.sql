@@ -44,9 +44,9 @@ insert into wheelchair_boardings(wheelchair_boarding, description)
 create table stops (
   stop_id       text,--PRIMARY KEY
   stop_code     text,
-  stop_name     text,
+  stop_name     text, --NOT NULL
   stop_desc     text,
-  stop_position geometry(Point, 4326), 
+  stop_position geometry(Point, 4326), --NOT NULL
   zone_id       text,
   stop_url      text,
   location_type   int, --FOREIGN KEY REFERENCES location_types(location_type)
@@ -73,10 +73,10 @@ insert into route_types (route_type, description) values (7, 'Steep Incline Rail
 create table routes (
   route_id    text ,--PRIMARY KEY
   agency_id   text , --FOREIGN KEY REFERENCES agency(agency_id)
-  route_short_name  text DEFAULT '',
-  route_long_name   text DEFAULT '',
+  route_short_name  text, --NOT NULL
+  route_long_name   text, --NOT NULL
   route_desc  text,
-  route_type  int , --FOREIGN KEY REFERENCES route_types(route_type)
+  route_type  int , --NOT NULL FOREIGN KEY REFERENCES route_types(route_type)
   route_url   text,
   route_color text,
   route_text_color  text
@@ -137,6 +137,14 @@ create table shapes (
   shape_dist_traveled double precision
 );
 
+
+create table directions (
+  direction_id int PRIMARY KEY,
+  description text
+);
+
+insert into directions (direction_id, description) values (0,'Travel in one direction ');
+insert into directions (direction_id, description) values (1,'Travel in the opposite direction');
 
 create table trips (
   route_id      text, --NOT NULL REFERENCES routes(route_id),
