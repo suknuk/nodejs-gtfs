@@ -126,6 +126,10 @@ ALTER TABLE stop_times
   ADD CONSTRAINT stop_times_departure_time_check
     CHECK (departure_time LIKE '__:__:__');
 
+CREATE INDEX stop_times_stop_sequence_index 
+  ON stop_times(trip_id,stop_sequence);
+
+
 
 ALTER TABLE frequencies
   ALTER COLUMN trip_id SET NOT NULL,
