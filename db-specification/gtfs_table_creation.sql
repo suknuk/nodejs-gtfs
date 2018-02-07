@@ -1,4 +1,5 @@
--- many things taken from https://github.com/cbick/gtfs_SQL_importer/blob/master/src/gtfs_tables.sql
+-- many things taken from https://github.com/cbick/gtfs_SQL_importer/tree/master/src
+
 
 begin;
 
@@ -11,12 +12,12 @@ create table agency (
   agency_phone    text,
   agency_fare_url text,
   agency_email    text
-)
+);
 
 
 --related to stops(location_type)
 create table location_types (
-  location_type int,--PRIMARY KEY
+  location_type int PRIMARY KEY,
   description   text
 );
 
@@ -29,15 +30,15 @@ insert into location_types(location_type, description)
 
 --related to stops(wheelchair_boarding)
 create table wheelchair_boardings (
-  wheelchair_boarding int,--PRIMARY KEY
+  wheelchair_boarding int PRIMARY KEY,
   description         text
 );
 
 insert into wheelchair_boardings(wheelchair_boarding, description)
   values (0, 'No accessibility information available for the stop');
-insert into gtfs_wheelchair_boardings(wheelchair_boarding, description)
+insert into wheelchair_boardings(wheelchair_boarding, description)
   values (1, 'At least some vehicles at this stop can be boarded by a rider in a wheelchair');
-insert into gtfs_wheelchair_boardings(wheelchair_boarding, description)
+insert into wheelchair_boardings(wheelchair_boarding, description)
   values (2, 'Wheelchair boarding is not possible at this stop');
 
 create table stops (
@@ -69,7 +70,7 @@ insert into route_types (route_type, description) values (5, 'Cable Car');
 insert into route_types (route_type, description) values (6, 'Suspended Car');
 insert into route_types (route_type, description) values (7, 'Steep Incline Rail');
 
-create table gtfs_routes (
+create table routes (
   route_id    text ,--PRIMARY KEY
   agency_id   text , --FOREIGN KEY REFERENCES agency(agency_id)
   route_short_name  text DEFAULT '',
@@ -117,7 +118,7 @@ create table fare_attributes (
   payment_method NUMERIC(1),--NOT NULL REFERENCES payment_methods,
   transfers         int, --NOT NULL
   agency_id         text,--REFERENCES agency(agency_id)
-  transfer_duration int,
+  transfer_duration int
 );
 
 create table fare_rules (
@@ -163,16 +164,16 @@ insert into pickup_dropoff_types (type_id, description) values (2,'Phone arrange
 insert into pickup_dropoff_types (type_id, description) values (3,'Driver arrangement only');
 
 create table stop_times (
-  trip_id       text, --NOT NULL REFERENCES gtfs_trips(trip_id),
+  trip_id       text, --NOT NULL REFERENCES trips(trip_id),
   arrival_time  text, --NOT NULL CHECK (arrival_time LIKE '__:__:__'),
   departure_time text, --NOT NULL CHECK (departure_time LIKE '__:__:__'),
-  stop_id       text, --NOT NULL REFERENCES gtfs_stops(stop_id),
+  stop_id       text, --NOT NULL REFERENCES stops(stop_id),
   stop_sequence int, --NOT NULL,
   stop_headsign text,
   pickup_type   int, --REFERENCES pickup_dropoff_types(type_id),
   drop_off_type int, --REFERENCES pickup_dropoff_types(type_id),
   shape_dist_traveled double precision,
-  timepoint int,
+  timepoint int
 );
 
 
@@ -204,7 +205,7 @@ create table transfers (
   from_stop_id  text, --NOT NULL REFERENCES stops(stop_id)
   to_stop_id    text, --NOT NULL REFERENCES stops(stop_id)
   transfer_type int, --NOT NULL REFERENCES transfer_types(transfer_type)
-  min_transfer_time int, --TODO check
+  min_transfer_time int --TODO check
 );
 
 
@@ -213,7 +214,7 @@ create table feed_info (
   feed_publisher_url  text, --NOT NULL
   feed_lang           text, --NOT NULL
   feed_start_date text,
-  feed_end_date   text
+  feed_end_date   text,
   feed_version    text  
 );
 
