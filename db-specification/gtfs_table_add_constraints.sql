@@ -9,7 +9,8 @@ ALTER TABLE agency
 
 
 ALTER TABLE stops
-  ADD PRIMARY KEY (stop_id),
+  ADD CONSTRAINT stops_stop_id_pk
+    PRIMARY KEY (stop_id),
   ALTER COLUMN stop_name SET NOT NULL,
   ALTER COLUMN stop_position SET NOT NULL,
   ADD CONSTRAINT stops_location_type_fk 
@@ -24,7 +25,8 @@ ALTER TABLE stops
 
 
 ALTER TABLE routes
-  ADD PRIMARY KEY (route_id),
+  ADD CONSTRAINT routes_route_id_pk
+    PRIMARY KEY (route_id),
   ALTER COLUMN route_short_name SET NOT NULL,
   ALTER COLUMN route_long_name SET NOT NULL,
   ALTER COLUMN route_type SET NOT NULL,
@@ -37,7 +39,8 @@ ALTER TABLE routes
 
 
 ALTER TABLE calendar
-  ADD PRIMARY KEY (service_id),
+  ADD CONSTRAINT calendar_service_id_pk
+    PRIMARY KEY (service_id),
   ALTER COLUMN monday SET NOT NULL,
   ALTER COLUMN tuesday SET NOT NULL,
   ALTER COLUMN wednesday SET NOT NULL,
@@ -59,7 +62,8 @@ ALTER TABLE calendar_dates
 
 
 ALTER TABLE fare_attributes
-  ADD PRIMARY KEY (fare_id),
+  ADD CONSTRAINT fare_attributes_fare_id_fk
+    PRIMARY KEY (fare_id),
   ALTER COLUMN price SET NOT NULL,
   ALTER COLUMN currency_type SET NOT NULL,
   ALTER COLUMN payment_method SET NOT NULL,
@@ -83,13 +87,15 @@ ALTER TABLE fare_rules
 
 
 ALTER TABLE shapes
-  ADD PRIMARY KEY (shape_id),
+  ADD CONSTRAINT shapes_shape_id_pk
+    PRIMARY KEY (shape_id),
   ALTER COLUMN shape_point SET NOT NULL,
   ALTER COLUMN shape_pt_sequence SET NOT NULL;
 
 
 ALTER TABLE trips
-  ADD PRIMARY KEY (trip_id),
+  ADD CONSTRAINT trips_trip_id_pk
+    PRIMARY KEY (trip_id),
   ALTER COLUMN route_id SET NOT NULL,
   ALTER COLUMN service_id SET NOT NULL,
   ADD CONSTRAINT trips_route_id_fk
