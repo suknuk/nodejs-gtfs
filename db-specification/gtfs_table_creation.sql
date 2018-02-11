@@ -79,7 +79,8 @@ create table routes (
   route_type  int , --NOT NULL FOREIGN KEY REFERENCES route_types(route_type)
   route_url   text,
   route_color text,
-  route_text_color  text
+  route_text_color  text,
+  route_sort_order int
 );
 
 
