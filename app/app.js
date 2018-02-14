@@ -3,7 +3,7 @@ const app = express();
 
 const dbInsertQueries = require('./db/queries/inserts');
 
-qbody = ['myAgencyId2','myAgName','myAgURL','asdasd',null,null,null,null];
+qbody = ['myAgencyId5','myAgName','myAgURL','asdasd','','','',''];
 
 
 dbInsertQueries.insertAgency(qbody, (res,err) => {
