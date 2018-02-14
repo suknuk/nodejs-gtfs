@@ -106,7 +106,13 @@ ALTER TABLE trips
     REFERENCES calendar(service_id),
   ADD CONSTRAINT trips_direction_id_fk
     FOREIGN KEY (direction_id)
-    REFERENCES directions(direction_id);
+    REFERENCES directions(direction_id),
+  ADD CONSTRAINT trips_wheelchair_accessible_fk
+    FOREIGN KEY (wheelchair_accessible)
+    REFERENCES wheelchair_accessibles(wheelchair_accessible),
+  ADD CONSTRAINT trips_bikes_allowed_fk
+    FOREIGN KEY (bikes_allowed)
+    REFERENCES bikes_allowed(bike_allowed);
 
 
 ALTER TABLE stop_times

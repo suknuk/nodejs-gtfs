@@ -42,7 +42,9 @@ ALTER TABLE trips
   ALTER COLUMN service_id DROP NOT NULL,
   DROP CONSTRAINT trips_route_id_fk CASCADE,
   DROP CONSTRAINT trips_service_id_fk CASCADE,
-  DROP CONSTRAINT trips_direction_id_fk CASCADE;
+  DROP CONSTRAINT trips_direction_id_fk CASCADE,
+  DROP CONSTRAINT trips_wheelchair_accessible_fk CASCADE,
+  DROP CONSTRAINT trips_bikes_allowed_fk CASCADE;
 
 
 ALTER TABLE shapes

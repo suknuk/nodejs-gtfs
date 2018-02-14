@@ -138,14 +138,42 @@ create table shapes (
   shape_dist_traveled double precision
 );
 
-
+--related to trips(direction_id)
 create table directions (
   direction_id int PRIMARY KEY,
-  description text
+  description  text
 );
 
 insert into directions (direction_id, description) values (0,'Travel in one direction ');
 insert into directions (direction_id, description) values (1,'Travel in the opposite direction');
+
+--related to trips(wheelchair_accessible)
+create table wheelchair_accessibles (
+  wheelchair_accessible int PRIMARY KEY,
+  description           text
+);
+
+insert into wheelchair_accessibles(wheelchair_accessible, description)
+  values (0, 'No accessibility information available for the trip');
+insert into wheelchair_accessibles(wheelchair_accessible, description)
+  values (1, 'At least one rider in a wheelchair can be accommodated on this trip');
+insert into wheelchair_accessibles(wheelchair_accessible, description)
+  values (2, 'Wheelchair riders can not be accommodated on this trip');
+
+--related to trips(bikes_allowed)
+create table bikes_allowed (
+  bike_allowed int PRIMARY KEY,
+  description  text
+);
+
+insert into bikes_allowed(bike_allowed, description)
+  values (0, 'No bike information available for the trip');
+insert into bikes_allowed(bike_allowed, description)
+  values (1, 'At least one bicycle can be accommodated on this trip');
+insert into bikes_allowed(bike_allowed, description)
+  values (2, 'No bicycles are allowed on this trip');
+
+
 
 create table trips (
   route_id      text, --NOT NULL REFERENCES routes(route_id),
@@ -156,8 +184,8 @@ create table trips (
   direction_id  int, --REFERENCES directions(direction_id),
   block_id      text,
   shape_id      text,  
-  wheelchair_accessible int, --TODO
-  bikes_allowed int --TODO
+  wheelchair_accessible int, --REFERENCES wheelchair_accessibles(wheelchair_accessible)
+  bikes_allowed int --REFERENCES bikes_allowed(bike_allowed)
 );
 
 
