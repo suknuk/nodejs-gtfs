@@ -1,9 +1,10 @@
 const express = require('express');
+
 const app = express();
 
-const dbInsertQueries = require('./db/queries/inserts');
+// const dbInsertQueries = require('./db/queries/inserts');
 
-qbody = ['myAgencyId','myAgName','myAgURL','asdasd','','','',''];
+// qbody = ['myAgencyId','myAgName','myAgURL','asdasd','','','',''];
 
 /*
 dbInsertQueries.insertAgency(qbody, (res,err) => {
