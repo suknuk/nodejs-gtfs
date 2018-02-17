@@ -1,4 +1,6 @@
-import { query } from '../index';
+const db = require('../../db/index');
+
+// import { query } from '../index';
 
 function insertQueryCreation(tableName, attributes, values) {
   if (attributes.length < 1 || attributes.length !== values.length) {
@@ -31,7 +33,7 @@ function insertQueryCreation(tableName, attributes, values) {
 
 function doQuery(tableName, attributes, values, callback) {
   const queryString = insertQueryCreation(tableName, attributes, values);
-  query(queryString)
+  db.query(queryString)
     .then((dbRes) => {
       callback(null, dbRes);
     })

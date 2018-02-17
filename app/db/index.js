@@ -10,6 +10,8 @@ const config = {
 };
 const pool = new Pool(config);
 
-export default function query(text, params, callback) {
-  return pool.query(text, params, callback);
-}
+module.exports = {
+  query: (text, params, callback) => {
+    return pool.query(text, params, callback);
+  },
+};

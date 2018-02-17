@@ -1,4 +1,4 @@
-import { query } from '../index';
+const db = require('../../db/index');
 
 function whereStatementCreation(attributes, values) {
   if (attributes.length > 0 && attributes.length === values.length) {
@@ -8,16 +8,17 @@ function whereStatementCreation(attributes, values) {
       if (i > 0) {
         whereString += ' AND ';
       }
-      whereString += `${attributes[i]} = ${values[i]}`;
+      whereString += `${attributes[i]} = '${values[i]}'`;
     }
+    whereString += ';';
     return whereString;
   }
-  return '';
+  return ';';
 }
 
 function doQuery(selectQueryString, attributes, values, callback) {
   const queryString = selectQueryString + whereStatementCreation(attributes, values);
-  query(queryString)
+  db.query(queryString)
     .then((dbRes) => {
       callback(null, dbRes);
     })
@@ -93,4 +94,5 @@ const functions = {
   },
 };
 
-export default functions;
+// export default functions;
+module.exports = functions;
