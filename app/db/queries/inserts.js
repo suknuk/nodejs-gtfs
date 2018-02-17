@@ -1,7 +1,5 @@
 const db = require('../../db/index');
 
-// import { query } from '../index';
-
 function insertQueryCreation(tableName, attributes, values) {
   if (attributes.length < 1 || attributes.length !== values.length) {
     return '';
@@ -14,9 +12,9 @@ function insertQueryCreation(tableName, attributes, values) {
     if (i > 0) {
       queryString += ',';
     }
-    queryString += attributes[i];
+    queryString += `'${attributes[i]}'`;
   }
-  queryString += ') VALUES(';
+  queryString += ') VALUES (';
 
   // attribute value addition
   for (let i = 0; i < values.length; i += 1) {
@@ -26,7 +24,7 @@ function insertQueryCreation(tableName, attributes, values) {
     }
     queryString += values[i];
   }
-  queryString += ')';
+  queryString += ');';
 
   return queryString;
 }

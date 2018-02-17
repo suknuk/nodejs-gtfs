@@ -30,4 +30,8 @@ app.get('/frequencies', frequencies);
 app.get('/transfers', transfers);
 app.get('/feedInfo', feedInfo);
 
+const gtfsUpload = require('./fileUpload/gtfsUpload');
+
+app.post('/addGTFS', gtfsUpload);
+
 module.exports = app;
