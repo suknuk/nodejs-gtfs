@@ -1,4 +1,4 @@
-const db = require('../index');
+import { query } from '../index';
 
 function whereStatementCreation(attributes, values) {
   if (attributes.length > 0 && attributes.length === values.length) {
@@ -15,9 +15,9 @@ function whereStatementCreation(attributes, values) {
   return '';
 }
 
-function doQuery(query, attributes, values, callback) {
-  const queryString = query + whereStatementCreation(attributes, values);
-  db.query(queryString)
+function doQuery(selectQueryString, attributes, values, callback) {
+  const queryString = selectQueryString + whereStatementCreation(attributes, values);
+  query(queryString)
     .then((dbRes) => {
       callback(null, dbRes);
     })

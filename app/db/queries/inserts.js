@@ -1,7 +1,37 @@
 import { query } from '../index';
 
-function doQuery(queryString, body, callback) {
-  query(queryString, body)
+function insertQueryCreation(tableName, attributes, values) {
+  if (attributes.length < 1 || attributes.length !== values.length) {
+    return '';
+  }
+  let queryString = `INSERT INTO ${tableName}(`;
+
+  // attribute name addition
+  for (let i = 0; i < attributes.length; i += 1) {
+    // Add comma for each attribute after the first one
+    if (i > 0) {
+      queryString += ',';
+    }
+    queryString += attributes[i];
+  }
+  queryString += ') VALUES(';
+
+  // attribute value addition
+  for (let i = 0; i < values.length; i += 1) {
+    // Add comma for each value after the first one
+    if (i > 0) {
+      queryString += ',';
+    }
+    queryString += values[i];
+  }
+  queryString += ')';
+
+  return queryString;
+}
+
+function doQuery(tableName, attributes, values, callback) {
+  const queryString = insertQueryCreation(tableName, attributes, values);
+  query(queryString)
     .then((dbRes) => {
       callback(null, dbRes);
     })
@@ -12,124 +42,56 @@ function doQuery(queryString, body, callback) {
 
 const functions = {
 
-  insertAgency(body, callback) {
-    const queryString = `
-    INSERT INTO agency(agency_id, agency_name, agency_url, 
-      agency_timezone, agency_lang, agency_phone, agency_fare_url, agency_email) 
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`;
-
-    doQuery(queryString, body, callback);
+  insertAgency(attributes, values, callback) {
+    doQuery('agency', attributes, values, callback);
   },
 
-  insertStop(body, callback) {
-    const queryString = `
-    INSERT INTO stops(stop_id, stop_code, stop_name, stop_desc, stop_position, 
-      zone_id, stop_url, location_type, parent_station, stop_timezone,
-      wheelchair_boarding)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`;
-
-    doQuery(queryString, body, callback);
+  insertStop(attributes, values, callback) {
+    doQuery('stops', attributes, values, callback);
   },
 
-  insertRoute(body, callback) {
-    const queryString = `
-    INSERT INTO routes(route_id, agency_id, route_short_name, route_long_name,
-      route_desc, route_type, route_url, route_color, route_text_color,
-      route_sort_order)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`;
-
-    doQuery(queryString, body, callback);
+  insertRoute(attributes, values, callback) {
+    doQuery('routes', attributes, values, callback);
   },
 
-  insertCalendar(body, callback) {
-    const queryString = `
-    INSERT INTO calendar(service_id, monday, tuesday, wednesday, thursday,
-      friday, saturday, sunday, start_date, end_date)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`;
-
-    doQuery(queryString, body, callback);
+  insertCalendar(attributes, values, callback) {
+    doQuery('calendar', attributes, values, callback);
   },
 
-  insertCalendarDate(body, callback) {
-    const queryString = `
-    INSERT INTO calendar_dates(service_id, date, exception_type)
-    VALUES ($1,$2,$3)`;
-
-    doQuery(queryString, body, callback);
+  insertCalendarDate(attributes, values, callback) {
+    doQuery('calendar_dates', attributes, values, callback);
   },
 
-  insertFareAttribute(body, callback) {
-    const queryString = `
-    INSERT INTO fare_attributes(fare_id, price, currency_type, payment_method,
-      transfers, agency_id, transfer_duration)
-    VALUES ($1,$2,$3,$4,$5,$6,$7)`;
-
-    doQuery(queryString, body, callback);
+  insertFareAttribute(attributes, values, callback) {
+    doQuery('fare_attributes', attributes, values, callback);
   },
 
-  insertFareRule(body, callback) {
-    const queryString = `
-    INSERT INTO fare_rules(fare_id, route_id, origin_id, destination_id,
-      contains_id)
-    VALUES ($1,$2,$3,$4,$5)`;
-
-    doQuery(queryString, body, callback);
+  insertFareRule(attributes, values, callback) {
+    doQuery('fare_rules', attributes, values, callback);
   },
 
-  insertShape(body, callback) {
-    const queryString = `
-    INSERT INTO shapes(shape_id, shape_point, shape_pt_sequence,
-      shape_dist_traveled)
-    VALUES ($1,$2,$3,$4)`;
-
-    doQuery(queryString, body, callback);
+  insertShape(attributes, values, callback) {
+    doQuery('shapes', attributes, values, callback);
   },
 
-  insertTrip(body, callback) {
-    const queryString = `
-    INSERT INTO trips(route_id, service_id, trip_id, trip_headsign,
-      trip_short_name, direction_id, block_id, shape_id,
-      wheelchair_accessible, bikes_allowed)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`;
-
-    doQuery(queryString, body, callback);
+  insertTrip(attributes, values, callback) {
+    doQuery('trips', attributes, values, callback);
   },
 
-  insertStopTime(body, callback) {
-    const queryString = `
-    INSERT INTO stop_times(trip_id, arrival_time, departure_time, stop_id,
-      stop_sequence, stop_headsign, pickup_type, drop_off_type,
-      shape_dist_traveled, timepoint)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`;
-
-    doQuery(queryString, body, callback);
+  insertStopTime(attributes, values, callback) {
+    doQuery('stop_times', attributes, values, callback);
   },
 
-  insertFrequency(body, callback) {
-    const queryString = `
-    INSERT INTO frequencies(trip_id, start_time, end_time, headway_secs,
-      exact_times)
-    VALUES ($1,$2,$3,$4,$5)`;
-
-    doQuery(queryString, body, callback);
+  insertFrequency(attributes, values, callback) {
+    doQuery('frequencies', attributes, values, callback);
   },
 
-  insertTransfer(body, callback) {
-    const queryString = `
-    INSERT INTO transfers(from_stop_id, to_stop_id, transfer_type,
-      min_transfer_time)
-    VALUES ($1,$2,$3,$4)`;
-
-    doQuery(queryString, body, callback);
+  insertTransfer(attributes, values, callback) {
+    doQuery('transfers', attributes, values, callback);
   },
 
-  insertFeedInfo(body, callback) {
-    const queryString = `
-    INSERT INTO feed_info(feed_publisher_name, feed_publisher_url,
-      feed_lang, feed_start_date, feed_end_date, feed_version)
-    VALUES ($1,$2,$3,$4,$5,$6)`;
-
-    doQuery(queryString, body, callback);
+  insertFeedInfo(attributes, values, callback) {
+    doQuery('feed_info', attributes, values, callback);
   },
 
 };
