@@ -1,30 +1,33 @@
 const express = require('express');
-const dbSelect = require('../db/queries/selects');
 
-const router = express.Router();
+const app = express();
 
-function ObjectValues(obj) {
-  const keys = Object.keys(obj);
-  const vals = [];
-  for (let i = 0; i < keys.length; i += 1) {
-    if (Object.prototype.hasOwnProperty.call(obj, keys[i])) {
-      vals.push(obj[keys[i]]);
-    }
-  }
-  return vals;
-}
+const agency = require('./fields/agency');
+const stops = require('./fields/stops');
+const routes = require('./fields/routes');
+const calendar = require('./fields/calendar');
+const calendarDate = require('./fields/calendarDate');
+const fareAttributes = require('./fields/fareAttributes');
+const fareRules = require('./fields/fareRules');
+const shapes = require('./fields/shapes');
+const trips = require('./fields/trips');
+const stopTimes = require('./fields/stopTimes');
+const frequencies = require('./fields/frequencies');
+const transfers = require('./fields/transfers');
+const feedInfo = require('./fields/feedInfo');
 
-router.get('/agency', (req, res) => {
-  // console.log(`keys: ${Object.keys(req.query)}`);
-  // console.log(`vals: ${ObjectValues(req.query)}`);
+app.get('/agency', agency);
+app.get('/stops', stops);
+app.get('/routes', routes);
+app.get('/calendar', calendar);
+app.get('/calendarDate', calendarDate);
+app.get('/fareAttributes', fareAttributes);
+app.get('/fareRules', fareRules);
+app.get('/shapes', shapes);
+app.get('/trips', trips);
+app.get('/stopTimes', stopTimes);
+app.get('/frequencies', frequencies);
+app.get('/transfers', transfers);
+app.get('/feedInfo', feedInfo);
 
-  dbSelect.getAgency(Object.keys(req.query), ObjectValues(req.query), (cErr, cRes) => {
-    if (cErr) {
-      res.status(400).send(cErr);
-    } else {
-      res.send(cRes.rows);
-    }
-  });
-});
-
-module.exports = router;
+module.exports = app;

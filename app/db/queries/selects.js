@@ -58,7 +58,7 @@ const functions = {
     doQuery(queryString, attributes, values, callback);
   },
 
-  getFareFareRules(attributes, values, callback) {
+  getFareRules(attributes, values, callback) {
     const queryString = 'SELECT * FROM fare_rules';
     doQuery(queryString, attributes, values, callback);
   },
