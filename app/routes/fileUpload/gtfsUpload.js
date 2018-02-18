@@ -78,6 +78,23 @@ function insertCSVdata(fileName) {
   }));
 }
 
+// async block insertion to not validate DB constraints
+const insertOrder = async () => {
+  await insertCSVdata('agency.txt');
+  await insertCSVdata('stops.txt');
+  await insertCSVdata('routes.txt');
+  await insertCSVdata('calendar.txt');
+  await insertCSVdata('calendar_dates.txt');
+  await insertCSVdata('fare_attributes.txt');
+  await insertCSVdata('fare_rules.txt');
+  await insertCSVdata('shapes.txt');
+  await insertCSVdata('trips.txt');
+  await insertCSVdata('stop_times.txt');
+  await insertCSVdata('frequencies.txt');
+  await insertCSVdata('transfers.txt');
+  await insertCSVdata('feed_info.txt');
+};
+
 router.post('/addGTFS', upload, (req, res) => {
   upload(req, res, (uErr) => {
     if (uErr) {
@@ -123,10 +140,7 @@ router.post('/addGTFS', upload, (req, res) => {
           console.log('has agency');
         }
         */
-        insertCSVdata('agency.txt')
-          .then(insertCSVdata('stops.txt'))
-          .then(insertCSVdata('routes.txt'))
-          .then(insertCSVdata('calendar.txt'));
+        insertOrder();
         zip.close();
       });
     });

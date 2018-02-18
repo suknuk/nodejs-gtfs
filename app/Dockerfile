@@ -1,4 +1,4 @@
-FROM node:6.12.2
+FROM node:carbon
 
 WORKDIR /usr/gtfs_app
 
