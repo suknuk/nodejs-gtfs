@@ -115,4 +115,3 @@ ALTER TABLE agency
   ALTER COLUMN agency_name DROP NOT NULL,
   ALTER COLUMN agency_url DROP NOT NULL,
   ALTER COLUMN agency_timezone DROP NOT NULL;
-

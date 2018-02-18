@@ -22,7 +22,7 @@ const upload = multer({
 }).single('gtfs');
 
 // Associating the correct insert function with the file
-function findInsertFunctionAndInsert(fileName, obj) {
+function findInsertFunctionAndInsert(fileName, obj, callback) {
   let insertFunction = null;
   if (fileName === 'agency.txt') {
     insertFunction = dbInsert.insertAgency;
@@ -57,25 +57,42 @@ function findInsertFunctionAndInsert(fileName, obj) {
       if (err) {
         console.log(err);
       }
+      callback();
     });
   }
 }
 
 function insertCSVdata(fileName) {
   return new Promise(((resolve, reject) => {
+    // Check if file exists
     fs.stat(`extracted/${fileName}`, (err, stat) => {
       if (err == null) {
-        const stream = fs.createReadStream(`extracted/${fileName}`);
-
-        csv.fromStream(stream, { headers: true })
-          .on('data', (data) => {
-            // console.log(`${entry.name} ${JSON.stringify(data)} ${Object.keys(data)}`);
-            console.log(`${fileName} ${Object.keys(data)} ::: ${ObjectValues(data)}`);
-            findInsertFunctionAndInsert(fileName, data);
+        // Count lines of file
+        let lineCount = 0;
+        let insertedTimes = 0;
+        fs.createReadStream(`extracted/${fileName}`)
+          .on('data', (chunk) => {
+            for (let i = 0; i < chunk.length; i += 1) {
+              if (chunk[i] === 10) lineCount += 1;
+            }
           })
           .on('end', () => {
-            console.log(`${fileName} done`);
-            resolve();
+            const stream = fs.createReadStream(`extracted/${fileName}`);
+
+            csv.fromStream(stream, { headers: true })
+              .on('data', (data) => {
+                findInsertFunctionAndInsert(fileName, data, () => {
+                  
+                  insertedTimes += 1;
+                  // console.log(`inserting finished. times = ${insertedTimes}, total = ${lineCount}`);
+                  if (insertedTimes === lineCount) {
+                    resolve();
+                  }
+                });
+              })
+              .on('end', () => {
+                console.log(`${fileName} done`);
+              });
           });
       } else {
         console.log(`${fileName} does not exist`);
@@ -93,15 +110,13 @@ const insertOrder = async () => {
   await insertCSVdata('calendar.txt');
   await insertCSVdata('calendar_dates.txt');
   await insertCSVdata('fare_attributes.txt');
-  // await insertCSVdata('fare_rules.txt');
-  // await insertCSVdata('shapes.txt');
-  /*
+  await insertCSVdata('fare_rules.txt');
+  await insertCSVdata('shapes.txt');
   await insertCSVdata('trips.txt');
   await insertCSVdata('stop_times.txt');
   await insertCSVdata('frequencies.txt');
   await insertCSVdata('transfers.txt');
   await insertCSVdata('feed_info.txt');
-  */
 };
 
 router.post('/addGTFS', upload, (req, res) => {
@@ -119,36 +134,12 @@ router.post('/addGTFS', upload, (req, res) => {
     // Handle errors
     zip.on('error', err => res.end(err));
 
-    /*
-    zip.on('entry', (entry) => {
-      const stream = fs.createReadStream(`extracted/${entry.name}`);
-
-      csv
-        .fromStream(stream, { headers: true })
-        .on('data', (data) => {
-          // console.log(`${entry.name} ${JSON.stringify(data)} ${Object.keys(data)}`);
-          console.log(`${entry.name} ${Object.keys(data)} ::: ${ObjectValues(data)}`);
-          findInsertFunction(entry.name, data);
-        })
-        .on('end', () => {
-          console.log(`${entry.name} done`);
-        });
-    });
-    */
-
     zip.on('ready', () => {
       // create directory if it does not exist
       if (!fs.existsSync('extracted')) {
         fs.mkdirSync('extracted');
       }
       zip.extract(null, './extracted', (err, count) => {
-        // console.log(err ? 'Extract error' : `Extracted ${count} entries`);
-        // console.log(Object.keys(zip.entries()));
-        /*
-        if (Object.prototype.hasOwnProperty.call(zip.entries(), 'agency.txt')) {
-          console.log('has agency');
-        }
-        */
         insertOrder();
         zip.close();
       });
