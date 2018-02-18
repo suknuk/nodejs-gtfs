@@ -12,7 +12,7 @@ function insertQueryCreation(tableName, attributes, values) {
     if (i > 0) {
       queryString += ',';
     }
-    queryString += `'${attributes[i]}'`;
+    queryString += attributes[i];
   }
   queryString += ') VALUES (';
 
@@ -22,7 +22,7 @@ function insertQueryCreation(tableName, attributes, values) {
     if (i > 0) {
       queryString += ',';
     }
-    queryString += values[i];
+    queryString += `'${values[i]}'`;
   }
   queryString += ');';
 
@@ -96,4 +96,4 @@ const functions = {
 
 };
 
-export default functions;
+module.exports = functions;
