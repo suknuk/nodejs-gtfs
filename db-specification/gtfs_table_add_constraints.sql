@@ -24,6 +24,20 @@ ALTER TABLE stops
     FOREIGN KEY (wheelchair_boarding)
     REFERENCES wheelchair_boardings(wheelchair_boarding);
 
+-- trigger for st_point creation of lat/lon attributes
+CREATE FUNCTION stops_geom_point_updating()
+RETURNS trigger AS '
+BEGIN
+  NEW.stop_position = ST_SetSRID(ST_MakePoint(NEW.stop_lon, NEW.stop_lat), 4326);
+
+  RETURN NEW;
+END' LANGUAGE 'plpgsql';
+
+CREATE TRIGGER stops_geom_point_updating_trigger
+  BEFORE INSERT OR UPDATE ON "stops"
+  FOR EACH ROW
+  EXECUTE PROCEDURE stops_geom_point_updating();
+
 
 ALTER TABLE routes
   ADD CONSTRAINT routes_route_id_pk
@@ -76,7 +90,7 @@ ALTER TABLE fare_attributes
     FOREIGN KEY (agency_id)
     REFERENCES agency(agency_id);
 
-
+-- trigger for fare_attributes.transfers. default = -1 which is unlimited
 CREATE FUNCTION fare_attributes_transfers_function()
 RETURNS trigger AS '
 BEGIN

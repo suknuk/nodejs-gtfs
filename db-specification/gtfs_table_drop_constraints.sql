@@ -68,8 +68,8 @@ ALTER TABLE fare_attributes
   DROP CONSTRAINT fare_attributes_payment_method_fk CASCADE,
   DROP CONSTRAINT fare_attributes_agency_id_fk CASCADE;
 
-DROP TRIGGER IF EXISTS fare_attributes_transfers_trigger;
-
+DROP TRIGGER IF EXISTS fare_attributes_transfers_trigger ON fare_attributes;
+DROP FUNCTION IF EXISTS fare_attributes_transfers_function;
 
 ALTER TABLE calendar_dates
   ALTER COLUMN service_id DROP NOT NULL,
@@ -109,6 +109,8 @@ ALTER TABLE stops
   DROP CONSTRAINT stops_wheelchair_boarding_fk CASCADE,
   DROP CONSTRAINT stops_stop_id_pk;
 
+DROP TRIGGER IF EXISTS stops_geom_point_updating_trigger ON stops;
+DROP FUNCTION IF EXISTS stops_geom_point_updating;
 
 ALTER TABLE agency
   DROP CONSTRAINT agency_id_unique,
