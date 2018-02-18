@@ -22,7 +22,7 @@ const upload = multer({
 }).single('gtfs');
 
 // Associating the correct insert function with the file
-function findInsertFunction(fileName, obj) {
+function findInsertFunctionAndInsert(fileName, obj) {
   let insertFunction = null;
   if (fileName === 'agency.txt') {
     insertFunction = dbInsert.insertAgency;
@@ -63,18 +63,25 @@ function findInsertFunction(fileName, obj) {
 
 function insertCSVdata(fileName) {
   return new Promise(((resolve, reject) => {
-    const stream = fs.createReadStream(`extracted/${fileName}`);
+    fs.stat(`extracted/${fileName}`, (err, stat) => {
+      if (err == null) {
+        const stream = fs.createReadStream(`extracted/${fileName}`);
 
-    csv.fromStream(stream, { headers: true })
-      .on('data', (data) => {
-        // console.log(`${entry.name} ${JSON.stringify(data)} ${Object.keys(data)}`);
-        console.log(`${fileName} ${Object.keys(data)} ::: ${ObjectValues(data)}`);
-        // findInsertFunction(entry.name, data);
-      })
-      .on('end', () => {
-        console.log(`${fileName} done`);
+        csv.fromStream(stream, { headers: true })
+          .on('data', (data) => {
+            // console.log(`${entry.name} ${JSON.stringify(data)} ${Object.keys(data)}`);
+            console.log(`${fileName} ${Object.keys(data)} ::: ${ObjectValues(data)}`);
+            findInsertFunctionAndInsert(fileName, data);
+          })
+          .on('end', () => {
+            console.log(`${fileName} done`);
+            resolve();
+          });
+      } else {
+        console.log(`${fileName} does not exist`);
         resolve();
-      });
+      }
+    });
   }));
 }
 
@@ -86,13 +93,15 @@ const insertOrder = async () => {
   await insertCSVdata('calendar.txt');
   await insertCSVdata('calendar_dates.txt');
   await insertCSVdata('fare_attributes.txt');
-  await insertCSVdata('fare_rules.txt');
-  await insertCSVdata('shapes.txt');
+  // await insertCSVdata('fare_rules.txt');
+  // await insertCSVdata('shapes.txt');
+  /*
   await insertCSVdata('trips.txt');
   await insertCSVdata('stop_times.txt');
   await insertCSVdata('frequencies.txt');
   await insertCSVdata('transfers.txt');
   await insertCSVdata('feed_info.txt');
+  */
 };
 
 router.post('/addGTFS', upload, (req, res) => {
@@ -145,7 +154,7 @@ router.post('/addGTFS', upload, (req, res) => {
       });
     });
 
-    return res.end('yay');
+    return res.end('Upload successfull\n');
   });
 });
 

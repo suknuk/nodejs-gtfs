@@ -12,7 +12,8 @@ ALTER TABLE stops
   ADD CONSTRAINT stops_stop_id_pk
     PRIMARY KEY (stop_id),
   ALTER COLUMN stop_name SET NOT NULL,
-  ALTER COLUMN stop_position SET NOT NULL,
+  ALTER COLUMN stop_lat SET NOT NULL,
+  ALTER COLUMN stop_lon SET NOT NULL,
   ADD CONSTRAINT stops_location_type_fk 
     FOREIGN KEY (location_type)
     REFERENCES location_types(location_type),
@@ -74,6 +75,21 @@ ALTER TABLE fare_attributes
   ADD CONSTRAINT fare_attributes_agency_id_fk
     FOREIGN KEY (agency_id)
     REFERENCES agency(agency_id);
+
+
+CREATE FUNCTION fare_attributes_transfers_function()
+RETURNS trigger AS '
+BEGIN
+  IF NEW.transfers IS NULL THEN
+    NEW.transfers := -1;
+  END IF;
+  RETURN NEW;
+END' LANGUAGE 'plpgsql';
+
+CREATE TRIGGER fare_attributes_transfers_trigger
+  BEFORE INSERT OR UPDATE ON "fare_attributes"
+  FOR EACH ROW
+  EXECUTE PROCEDURE fare_attributes_transfers_function();
 
 
 ALTER TABLE fare_rules

@@ -46,13 +46,16 @@ create table stops (
   stop_code     text,
   stop_name     text, --NOT NULL
   stop_desc     text,
-  stop_position geometry(Point, 4326), --NOT NULL
+  stop_lat      double precision, --NOT NULL
+  stop_lon      double precision, --NOT NULL
   zone_id       text,
   stop_url      text,
   location_type   int, --FOREIGN KEY REFERENCES location_types(location_type)
   parent_station  text, --FOREIGN KEY REFERENCES stops(stop_id)
   stop_timezone   text,
-  wheelchair_boarding int --FOREIGN KEY REFERENCES wheelchair_boardings(wheelchair_boarding)
+  wheelchair_boarding int, --FOREIGN KEY REFERENCES wheelchair_boardings(wheelchair_boarding)
+
+  stop_position geometry(Point, 4326) --NOT NULL
 );
 
 
@@ -117,7 +120,7 @@ create table fare_attributes (
   price         double precision,--NOT NULL
   currency_type text,--NOT NULL
   payment_method NUMERIC(1),--NOT NULL REFERENCES payment_methods,
-  transfers         int, --NOT NULL
+  transfers         int DEFAULT -1, --NOT NULL '-1' = unlimited
   agency_id         text,--REFERENCES agency(agency_id)
   transfer_duration int
 );

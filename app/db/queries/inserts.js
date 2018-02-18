@@ -4,6 +4,7 @@ function insertQueryCreation(tableName, attributes, values) {
   if (attributes.length < 1 || attributes.length !== values.length) {
     return '';
   }
+
   let queryString = `INSERT INTO ${tableName}(`;
 
   // attribute name addition
@@ -22,7 +23,13 @@ function insertQueryCreation(tableName, attributes, values) {
     if (i > 0) {
       queryString += ',';
     }
-    queryString += `'${values[i]}'`;
+
+    // check for empty string and replace with null
+    if (values[i]) {
+      queryString += `'${values[i]}'`;
+    } else {
+      queryString += 'null';
+    }
   }
   queryString += ');';
 

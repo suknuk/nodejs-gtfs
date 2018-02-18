@@ -68,6 +68,8 @@ ALTER TABLE fare_attributes
   DROP CONSTRAINT fare_attributes_payment_method_fk CASCADE,
   DROP CONSTRAINT fare_attributes_agency_id_fk CASCADE;
 
+DROP TRIGGER IF EXISTS fare_attributes_transfers_trigger;
+
 
 ALTER TABLE calendar_dates
   ALTER COLUMN service_id DROP NOT NULL,
@@ -100,7 +102,8 @@ ALTER TABLE routes
 
 ALTER TABLE stops
   ALTER COLUMN stop_name DROP NOT NULL,
-  ALTER COLUMN stop_position DROP NOT NULL,
+  ALTER COLUMN stop_lat DROP NOT NULL,
+  ALTER COLUMN stop_lon DROP NOT NULL,
   DROP CONSTRAINT stops_location_type_fk CASCADE,
   DROP CONSTRAINT stops_parent_station_fk,
   DROP CONSTRAINT stops_wheelchair_boarding_fk CASCADE,
