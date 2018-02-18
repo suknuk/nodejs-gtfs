@@ -1,0 +1,13 @@
+DELETE FROM feed_info;
+DELETE FROM transfers;
+DELETE FROM frequencies;
+DELETE FROM stop_times;
+DELETE FROM trips;
+DELETE FROM shapes;
+DELETE FROM fare_rules;
+DELETE FROM fare_attributes;
+DELETE FROM calendar_dates;
+DELETE FROM calendar;
+DELETE FROM routes;
+DELETE FROM stops;
+DELETE FROM agency;
